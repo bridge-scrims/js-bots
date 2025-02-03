@@ -20,7 +20,10 @@ import {
 
 import { HOST_GUILD_ID } from "@Constants"
 import { CommandHandler } from "./CommandHandler"
+import { helpCommand } from "./help";
 
+
+CommandInstaller.installCommand(helpCommand);
 type CacheTypeReducer<UserInstall, AnyContext> = AnyContext extends true
     ? UserInstall extends true
         ? CacheType
@@ -175,6 +178,9 @@ export class CommandInstaller {
         this.handler.addHandler(id, { callback: this.getCommandCallback(command), config })
     }
 }
+
+CommandInstaller.installCommand(helpCommand);
+
 
 export interface CommandConfig {
     permission?: string
