@@ -20,6 +20,7 @@ import {
 
 import { HOST_GUILD_ID } from "@Constants"
 import { CommandHandler } from "./CommandHandler"
+import { setLanguageCommand } from "./setLanguage";
 
 type CacheTypeReducer<UserInstall, AnyContext> = AnyContext extends true
     ? UserInstall extends true
@@ -175,6 +176,9 @@ export class CommandInstaller {
         this.handler.addHandler(id, { callback: this.getCommandCallback(command), config })
     }
 }
+
+CommandInstaller.installCommand(setLanguageCommand);
+
 
 export interface CommandConfig {
     permission?: string
