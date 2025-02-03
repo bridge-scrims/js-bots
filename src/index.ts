@@ -8,6 +8,8 @@ import { ASSETS, TEST } from "@Constants"
 import { BotModule, CommandInstaller, DB, DiscordBot, I18n, PersistentData, redis, subscriber } from "lib"
 import { ModuleLoader } from "./ModuleLoader"
 
+import i18n from 'i18n';
+
 type Entrypoint = { include?: string[]; exclude?: string[]; intents?: GatewayIntentBits[] }
 const ENTRYPOINTS: Record<string, Entrypoint> = {
     external: {
@@ -35,8 +37,16 @@ if (!entrypoint) {
     console.error("Unknown command '%s'!", command)
     process.exit(1)
 }
+i18n.configure({
+    locales: ['en-US', 'es-EU'],
+    directory: './locales',
+    defaultLocale: 'en-US',
+    autoReload: true,
+    syncFiles: true,
+    queryParameter: 'lang', // Allows changing the language via a URL parameter
 
-I18n.loadLocales(ASSETS + "lang")
+// Initialize i18n
+i18n.init();
 
 const intents = [GatewayIntentBits.DirectMessages]
 if (entrypoint.intents) intents.push(...entrypoint.intents)
