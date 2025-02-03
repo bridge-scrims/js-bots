@@ -8,6 +8,7 @@ import { ASSETS, TEST } from "@Constants"
 import { BotModule, CommandInstaller, DB, DiscordBot, I18n, PersistentData, redis, subscriber } from "lib"
 import { ModuleLoader } from "./ModuleLoader"
 
+// Define the type Entrypoint
 type Entrypoint = { include?: string[]; exclude?: string[]; intents?: GatewayIntentBits[] }
 const ENTRYPOINTS: Record<string, Entrypoint> = {
     external: {
@@ -29,14 +30,16 @@ const ENTRYPOINTS: Record<string, Entrypoint> = {
     },
 }
 
+// Get the command from the command line arguments
 const command = process.argv[2]?.toLowerCase() ?? ""
 const entrypoint = ENTRYPOINTS[command]
 if (!entrypoint) {
     console.error("Unknown command '%s'!", command)
     process.exit(1)
 }
-
-I18n.loadLocales(ASSETS + "lang")
+// Load locales for internationalization
+const language = process.env["LANGUAGE"] || "en-US"; // Choose language from environment variable
+ I18n.loadLocales(ASSETS + "lang") // Load the selected language
 
 const intents = [GatewayIntentBits.DirectMessages]
 if (entrypoint.intents) intents.push(...entrypoint.intents)
@@ -71,10 +74,12 @@ try {
     await shutdown(1)
 }
 
+// Function to get a formatted line
 function getLine(title: string = "") {
     return `\n\x1b[90m=============== ${title} =================\x1b[0m\n`
 }
 
+// Function to resolve the bot's presence
 function resolvePresence(): PresenceData | undefined {
     const presence = process.env["PRESENCE"]
     if (presence) {
@@ -86,6 +91,7 @@ function resolvePresence(): PresenceData | undefined {
     return undefined
 }
 
+// Function to start the bot
 async function startup(bot: DiscordBot) {
     await bot.login(process.env["BOT_TOKEN"]!)
 
@@ -115,6 +121,7 @@ async function startup(bot: DiscordBot) {
     console.log("Startup complete!")
 }
 
+// Function to shut down the bot
 async function shutdown(code: number) {
     console.log("Shutting down...")
     await Promise.race([
